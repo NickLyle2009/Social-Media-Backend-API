@@ -12,8 +12,14 @@ const userSchema = new Schema(
     email: {
       type: String,
       unique: true,
-      required: true,
+      required: [true, 'User email is required!'],
       //mongoose matching validation
+      validate: {
+        validator: function(v) {
+          return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(v);
+        },
+        message: props => `${props.value} is not a valid email!`
+      },
     },
 
     thoughts: [
@@ -38,6 +44,8 @@ const userSchema = new Schema(
     id: false,
   }
 );
+
+
 
 // **Schema Settings**:
 

@@ -4,8 +4,10 @@ const {
   getUsers,
   getSingleUser,
   createUser,
-  updateThought,
-  deleteThought,
+  updateUser,
+  deleteUser,
+  addFriend,
+  removeFriend,
 } = require('../../controllers/userController');
 
 // /api/users
@@ -14,23 +16,23 @@ router.route('/').get(getUsers).post(createUser);
 // /api/users/:userId
 router.route('/:userId').get(getSingleUser);
 router
-  .route('/:thoughtId')
-  .get(getSingleThought)
-  .put(updateThought)
-  .delete(deleteThought);
+  .route('/:userId')
+  .get(getSingleUser)
+  .put(updateUser)
+  .delete(deleteUser);
 
-// /api/thoughts/:thoughtId/tags
-router.route('/:thoughtId/tags').post(addTag);
+// /api/users/:userId/friends/:friendId
+router.route('/:userId/friends/:friendId').post(addFriend);
 
-// /api/thoughts/:thoughtId/tags/:tagId
-router.route('/:thoughtId/tags/:tagId').delete(removeTag);
+// /api/users/:userId/friends/:friendId
+router.route('/:userId/friends/:friendId').delete(removeFriend);
 
 module.exports = router;
 // **`/api/users`**
 
 // * `GET` all users
 
-// * `GET` a single user by its `_id` and populated thought and friend data
+// * `GET` a single user by its `_id` and populated user and friend data
 
 // * `POST` a new user:
 
@@ -46,7 +48,7 @@ module.exports = router;
 
 // * `DELETE` to remove user by its `_id`
 
-// **BONUS**: Remove a user's associated thoughts when deleted.
+// **BONUS**: Remove a user's associated users when deleted.
 
 // ---
 
@@ -58,31 +60,3 @@ module.exports = router;
 
 // ---
 
-// **`/api/thoughts`**
-
-// * `GET` to get all thoughts
-
-// * `GET` to get a single thought by its `_id`
-
-// * `POST` to create a new thought (don't forget to push the created thought's `_id` to the associated user's `thoughts` array field)
-
-// ```json
-// // example data
-// {
-//   "thoughtText": "Here's a cool thought...",
-//   "username": "lernantino",
-//   "userId": "5edff358a0fcb779aa7b118b"
-// }
-// ```
-
-// * `PUT` to update a thought by its `_id`
-
-// * `DELETE` to remove a thought by its `_id`
-
-// ---
-
-// **`/api/thoughts/:thoughtId/reactions`**
-
-// * `POST` to create a reaction stored in a single thought's `reactions` array field
-
-// * `DELETE` to pull and remove a reaction by the reaction's `reactionId` value

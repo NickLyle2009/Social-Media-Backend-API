@@ -25,7 +25,7 @@ const thoughtSchema = new Schema({
 //   * Array of nested documents created with the `reactionSchema`
 
 // **Schema Settings**:
-userSchema
+thoughtSchema
   .virtual('reactionCount')
   // Getter
   .get(function () {
@@ -34,6 +34,6 @@ userSchema
 
 // Create a virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query.
 
-const Student = model('thought', thoughtSchema);
+const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;

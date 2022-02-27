@@ -1,4 +1,4 @@
-const User = require("./User");
+const {User, Thought} = require("../models");
 
 module.exports = {
   // Get all users
@@ -16,7 +16,7 @@ module.exports = {
     User.findOne({ _id: req.params.userId })
       .select("-__v")
       .populate(`friends`)
-      .populate("thoughts")
+      .populate('thoughts')
       .then((user) =>
         !user
           ? res.status(404).json({ message: "No user with that ID" })
@@ -36,13 +36,30 @@ module.exports = {
         console.log(err);
       });
   },
+  updateUser(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: 'No user with this id!' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
   // Delete a user and associated apps
   deleteUser(req, res) {
-    User.findOneAndDelete({ _id: req.params.userId })
+    User.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
         !user
           ? res.status(404).json({ message: "No user with that ID" })
-          : Application.deleteMany({ _id: { $in: user.applications } })
+          : User.findOneAndUpdate(
+            { user: req.params.userId },
+            { $pull: { user: req.params.userId } },
+            { new: true }
+          )
       )
       .then(() => res.json({ message: "User and associated apps deleted!" }))
       .catch((err) => res.status(500).json(err));
@@ -59,4 +76,17 @@ module.exports = {
         console.log(err);
       });
   },
+  removeFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friend: {friendId: req.params.friendId}}},
+      {runValidators: true, new: true})
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: "No user with that ID" })
+        : Application.deleteMany(user)
+    )
+    .then(() => res.json({ message: "User and associated apps deleted!" }))
+    .catch((err) => res.status(500).json(err));
+  }
 };
