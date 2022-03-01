@@ -1,4 +1,4 @@
-const Thought = require("../models")
+const {Thought} = require("../models")
 
   module.exports = {
     getThoughts(req, res) {
@@ -8,7 +8,7 @@ const Thought = require("../models")
     },
     getSingleThought(req, res) {
       Thought.findOne({ _id: req.params.thoughtId })
-      .populate('reactionSchema')
+      //.populate('reactionSchema')
         .then((thought) =>
           !thought
             ? res.status(404).json({ message: 'No thought with that ID' })

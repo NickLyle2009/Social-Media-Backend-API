@@ -55,7 +55,7 @@ const getRandomThought = (int) => {
   const results = [];
   for (let i = 0; i < int; i++) {
     results.push({
-      thoughtName: getRandomArrItem(thoughts),
+      thoughtText: getRandomArrItem(thoughts),
     });
   }
   return results;
